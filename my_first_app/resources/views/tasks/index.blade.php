@@ -1,84 +1,89 @@
 @extends('layouts.app')
 
-@section('title','Mes Tâches')
+@section('header', 'Mes Tâches')
 
 @section('content')
 
-<div class="d-flex justify-content-between align-items-center mb-4">
+<div class="flex justify-between items-center mb-6">
     <div>
-        <h3>
+        <h2 class="text-2xl font-bold text-gray-800">
             Mes Tâches
-            <span class="badge bg-primary">
+            <span class="bg-blue-500 text-white text-sm px-2 py-1 rounded">
                 {{ $tasks->count() }}
             </span>
-        </h3>
-        <div>
-            <span class="badge bg-primary">{{ auth()->user()->name }}</span>
-            <form method="POST" action="{{ route('logout') }}" class="d-inline">
-                @csrf
-                <button type="submit" class="btn btn-sm btn-outline-danger">Deconnexion</button>
-            </form>
-        </div>
+        </h2>
+
+        <p class="text-sm text-gray-500 mt-1">
+            Connecté : {{ auth()->user()->name }}
+        </p>
     </div>
-    <a href="{{ route('tasks.create') }}" class="btn btn-primary btn-modern">Nouvelle tâche</a>
+
+    <a href="{{ route('tasks.create') }}"
+       class="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 transition">
+        + Nouvelle tâche
+    </a>
 </div>
+
+<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
 
 @forelse($tasks as $task)
 
-<div class="card mb-3 shadow-sm">
+<div class="bg-white p-5 rounded-xl shadow hover:shadow-lg transition">
 
-<div class="card-body d-flex justify-content-between">
+    <h3 class="text-lg font-semibold
+        {{ $task->completed ? 'line-through text-green-500' : 'text-gray-800' }}">
+        {{ $task->title }}
+    </h3>
 
-<div>
+    <p class="text-gray-500 text-sm mt-2">
+        {{ $task->description }}
+    </p>
 
-<h5 class="{{ $task->completed ? 'text-decoration-line-through text-success' : '' }}">
-{{ $task->title }}
-</h5>
+    <div class="flex justify-between items-center mt-4">
 
-<p class="text-muted">
-{{ $task->description }}
-</p>
+        <span class="text-xs text-gray-400">
+            {{ $task->created_at->diffForHumans() }}
+        </span>
 
-</div>
+        <div class="flex gap-2">
 
-<div>
+            @can('update', $task)
+            <a href="{{ route('tasks.edit',$task) }}"
+               class="text-blue-500 hover:underline text-sm">
+                Modifier
+            </a>
+            @endcan
 
-@can('update', $task)
-<a href="{{ route('tasks.edit',$task) }}" class="btn btn-warning btn-sm">
-Modifier
-</a>
-@endcan
+            @can('delete', $task)
+            <form action="{{ route('tasks.destroy',$task) }}" method="POST">
+                @csrf
+                @method('DELETE')
+                <button class="text-red-500 hover:underline text-sm"
+                        onclick="return confirm('Supprimer ?')">
+                    Supprimer
+                </button>
+            </form>
+            @endcan
 
-@can('delete', $task)
-<form action="{{ route('tasks.destroy',$task) }}" method="POST" class="d-inline">
-@csrf
-@method('DELETE')
-<button class="btn btn-danger btn-sm" onclick="return confirm('Supprimer ?')">
-Supprimer
-</button>
-</form>
-@endcan>
+        </div>
 
-</div>
-
-</div>
+    </div>
 
 </div>
 
 @empty
 
-<div class="text-center p-4">
+<div class="col-span-3 text-center py-10">
+    <h3 class="text-gray-500 mb-4">Aucune tâche</h3>
 
-<h5>Aucune tâche</h5>
-
-<a href="{{ route('tasks.create') }}" class="btn btn-success">
-
-Créer votre première tâche
-
-</a>
-
+    <a href="{{ route('tasks.create') }}"
+       class="bg-green-500 text-white px-4 py-2 rounded-lg">
+        Créer votre première tâche
+    </a>
 </div>
 
 @endforelse
+
+</div>
 
 @endsection

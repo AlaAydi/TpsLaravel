@@ -1,69 +1,76 @@
 @extends('layouts.app')
 
-@section('title','Nouvelle tâche')
+@section('header', 'Nouvelle tâche')
 
 @section('content')
 
-<h3 class="mb-4">
-Créer une tâche
-</h3>
+<div class="max-w-xl mx-auto bg-white p-6 rounded-xl shadow">
 
-<form action="{{ route('tasks.store') }}" method="POST">
+    <h2 class="text-xl font-semibold mb-6 text-gray-800">
+        Créer une tâche
+    </h2>
 
-@csrf
+    @if ($errors->any())
+        <div class="mb-4 bg-red-100 text-red-600 p-3 rounded-lg">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>• {{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
-<div class="mb-3">
+    <form action="{{ route('tasks.store') }}" method="POST">
+        @csrf
 
-<label class="form-label">
-Titre
-</label>
+        <!-- Title -->
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+                Titre
+            </label>
 
-<input type="text"
-name="title"
-class="form-control @error('title') is-invalid @enderror"
-value="{{ old('title') }}">
+            <input
+                type="text"
+                name="title"
+                value="{{ old('title') }}"
+                placeholder="Ex: Apprendre Laravel"
+                class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 @error('title') border-red-500 @enderror">
 
-@error('title')
+            @error('title')
+                <p class="text-red-500 text-sm mt-1">
+                    {{ $message }}
+                </p>
+            @enderror
+        </div>
 
-<div class="invalid-feedback">
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-1">
+                Description
+            </label>
 
-{{ $message }}
+            <textarea
+                name="description"
+                rows="4"
+                placeholder="Détails de la tâche..."
+                class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400">{{ old('description') }}</textarea>
+        </div>
+
+        <div class="flex justify-between items-center">
+
+            <button
+                class="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition shadow">
+                Enregistrer
+            </button>
+
+            <a href="{{ route('tasks.index') }}"
+               class="text-gray-500 hover:underline">
+                Annuler
+            </a>
+
+        </div>
+
+    </form>
 
 </div>
-
-@enderror
-
-</div>
-
-<div class="mb-3">
-
-<label class="form-label">
-Description
-</label>
-
-<textarea
-name="description"
-class="form-control"
-rows="4">
-
-{{ old('description') }}
-
-</textarea>
-
-</div>
-
-<button class="btn btn-success">
-
-Enregistrer
-
-</button>
-
-<a href="{{ route('tasks.index') }}" class="btn btn-secondary">
-
-Annuler
-
-</a>
-
-</form>
 
 @endsection

@@ -7,10 +7,7 @@ use App\Models\Task;
 
 class TaskController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     * SELECT * FROM tasks ORDER BY created_at DESC
-     */
+
     public function index()
     {
         $this->authorize('viewAny', Task::class);
@@ -18,19 +15,14 @@ class TaskController extends Controller
         return view('tasks.index', compact('tasks'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+
     public function create()
     {
         $this->authorize('create', Task::class);
         return view('tasks.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     * INSERT INTO tasks (title, description) VALUES (?, ?)
-     */
+ 
     public function store(Request $request)
     {
         $this->authorize('create', Task::class);

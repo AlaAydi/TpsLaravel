@@ -1,77 +1,59 @@
 @extends('layouts.app')
 
-@section('title','Modifier tâche')
+@section('header', 'Modifier tâche')
 
 @section('content')
 
-<h3 class="mb-4">
-Modifier la tâche
-</h3>
+<div class="max-w-xl mx-auto bg-white p-6 rounded-xl shadow">
 
 <form action="{{ route('tasks.update',$task) }}" method="POST">
-
 @csrf
 @method('PUT')
 
-<div class="mb-3">
+<div class="mb-4">
+    <label class="block text-sm font-medium text-gray-700 mb-1">
+        Titre
+    </label>
 
-<label class="form-label">
-Titre
-</label>
-
-<input
-type="text"
-name="title"
-class="form-control"
-value="{{ old('title',$task->title) }}">
-
+    <input type="text"
+           name="title"
+           value="{{ old('title',$task->title) }}"
+           class="w-full border rounded-lg px-3 py-2 focus:ring focus:ring-blue-200">
 </div>
 
-<div class="mb-3">
+<div class="mb-4">
+    <label class="block text-sm font-medium text-gray-700 mb-1">
+        Description
+    </label>
 
-<label class="form-label">
-Description
-</label>
-
-<textarea
-name="description"
-class="form-control"
-rows="4">
-
-{{ old('description',$task->description) }}
-
-</textarea>
-
+    <textarea name="description"
+              class="w-full border rounded-lg px-3 py-2"
+              rows="4">{{ old('description',$task->description) }}</textarea>
 </div>
 
-<div class="form-check mb-3">
+<div class="flex items-center gap-2 mb-4">
+    <input type="checkbox"
+           name="completed"
+           {{ $task->completed ? 'checked' : '' }}>
 
-<input
-type="checkbox"
-name="completed"
-class="form-check-input"
-{{ $task->completed ? 'checked' : '' }}>
-
-<label class="form-check-label">
-
-Marquer comme terminée
-
-</label>
-
+    <span class="text-sm text-gray-600">
+        Terminée
+    </span>
 </div>
 
-<button class="btn btn-primary">
+<div class="flex justify-between">
+    <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+        Mettre à jour
+    </button>
 
-Mettre à jour
-
-</button>
-
-<a href="{{ route('tasks.index') }}" class="btn btn-secondary">
-
-Annuler
-
-</a>
+    <a href="{{ route('tasks.index') }}"
+       class="text-gray-500 hover:underline">
+        Annuler
+    </a>
+</div>
 
 </form>
+
+</div>
 
 @endsection
